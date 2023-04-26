@@ -1,0 +1,261 @@
+stages:
+    compute_crisis_data:
+        cmd: python3 scripts/compute_crisis.py
+        deps:
+            - fonctions/crisis_df
+            - fonctions/param.py
+            - DATA/V360_incident_mail_label_2021_2022S1_20221221.xlsx
+        outs:
+            - DATA/Clean/crisis_messagerie_cleaned.csv
+    compute_lock_and_load:
+        cmd: python3 scripts/compute_lock_and_load.py 
+        deps:
+            - fonctions/nb_df/save_df.py
+            - fonctions/nb_df/lock_and_load.py
+            - fonctions/nb_df/extract_data.py
+            - fonctions/param.py
+            - DATA/spas_mail_brute_2021_2022.csv
+        outs:
+            - DATA/Clean/variable_textuelle.pkl
+            - DATA/Clean/data_mise_en_forme.csv
+    compute_data_cleaning:
+        cmd: python3 scripts/compute_data_cleaning.py 
+        deps:
+            - fonctions/nb_df/save_df.py
+            - fonctions/nb_df/data_cleaning_strings.py
+            - fonctions/param.py
+            - fonctions/nb_df/create_200000_lines_df.py
+            - DATA/Clean/variable_textuelle.pkl
+            - DATA/Clean/data_mise_en_forme.csv
+        outs:
+            - DATA/Clean/data_messagerie_cleaning_strings.csv
+            - DATA/Clean/VisualCRM
+            - DATA/Clean/variable_dataframe_to_convert.pkl
+    compute_dataframe_cleaned:
+        foreach: ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_dataframe_cleaned.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/nb_df/save_df.py
+                - fonctions/nb_df/encoding_dataset.py
+                - fonctions/nb_df/build_dataset.py
+                - fonctions/nb_df/add_crisis.py
+                - fonctions/compute_rolling_mean.py
+                - fonctions/get_holidays.py
+                - fonctions/param.py
+                - fonctions/crisis_df/save_crisis_df.py
+                - DATA/Clean/crisis_messagerie_cleaned.csv
+                - DATA/Clean/data_messagerie_cleaning_strings.csv
+                - DATA/Clean/variable_textuelle.pkl
+            outs:
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+                - DATA/Clean/unique_values_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+                - DATA/Clean/format_textuel_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+    compute_graphs_temps:
+        foreach: ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_crisis_graphs_temps.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/crisis_df
+                - fonctions/nb_df/save_df.py
+                - fonctions/crisis_graphs
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+                - DATA/Clean/data_messagerie_cleaning_strings.csv
+                - DATA/Clean/unique_values_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+                - DATA/Clean/variable_textuelle.pkl
+            outs:
+                - DATA/Visualisation/${item.n}_${item.t}/Période
+    compute_graphs_variables:
+        foreach: ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_crisis_graphs_variables.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/crisis_df
+                - fonctions/nb_df/save_df.py
+                - fonctions/crisis_graphs
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+                - DATA/Clean/data_messagerie_cleaning_strings.csv
+                - DATA/Clean/unique_values_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+                - DATA/Clean/variable_textuelle.pkl
+            outs:
+                - DATA/Visualisation/${item.n}_${item.t}/Variable
+    compute_graphs_overall:
+        foreach: ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_crisis_graphs_overall.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/crisis_df
+                - fonctions/nb_df/save_df.py
+                - fonctions/crisis_graphs
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+                - DATA/Clean/data_messagerie_cleaning_strings.csv
+                - DATA/Clean/unique_values_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+                - DATA/Clean/variable_textuelle.pkl
+                - DATA/Clean/format_textuel_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+            outs:
+                - DATA/Visualisation/${item.n}_${item.t}/Overall
+    compute_ISO:
+        foreach : ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_ISO.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/metrics
+                - fonctions/isolation_forest
+                - fonctions/nb_df
+                - fonctions/param.py
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+                - DATA/Clean/unique_values_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.pkl
+                - DATA/Clean/variable_textuelle.pkl
+            outs:
+                - DATA/Clean/ISO/data_anomaly_ISO_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_ISO_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+    compute_rand_algo:
+        foreach : ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_rand_algo.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/metrics
+                - fonctions/random_algo
+                - fonctions/nb_df
+                - fonctions/param.py
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+            outs:
+                - DATA/Clean/Rand/${item.n}_${item.t}
+                - DATA/Clean/Metrics/metrics_10_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_20_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_30_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_40_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_50_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_60_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_70_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_80_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_90_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+    compute_prophet_algo:
+        foreach : ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_prophete.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/metrics
+                - fonctions/prophete
+                - fonctions/nb_df
+                - fonctions/param.py
+                - DATA/Clean/data_messagerie_cleaned_${item.n}_${item.t}_${item.w}_${item.a}.csv
+            outs:
+                - DATA/Clean/prophete/data_anomaly_prophete_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_prophete_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+    compute_metrics:
+        foreach : ${params}
+        do:
+            cmd: >-
+                python3 scripts/compute_tableau_metrics.py 
+                --n=${item.n} 
+                --t=${item.t}
+                --contact=${item.contact}
+                --info=${item.info}
+                --sujet=${item.sujet}
+                --solution=${item.solution}
+                --types=${item.types}
+                --w=${item.w}
+                --a=${item.a}
+                --periode_start=${item.periode_start}
+                --periode_end=${item.periode_end}
+            deps:
+                - fonctions/metrics
+                - fonctions/param.py
+                - DATA/Clean/Metrics/metrics_10_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_20_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_30_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_40_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_50_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_60_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_70_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_80_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_90_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_ISO_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+                - DATA/Clean/Metrics/metrics_prophete_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv
+            outs:
+                - DATA/Clean/Metrics/METRICS_FINAL_${item.n}_${item.t}_${item.w}_${item.a}_Co_${item.contact}_In_${item.info}_Su_${item.sujet}_So_${item.solution}_Ty_${item.types}.csv

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "soda-baptiste"
+version = "0.1.0"
+description = "Poetry package for Anomaly detection on a Timeserie"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "soda_baptiste"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.24.2"
+pandas = "^1.5.3"
+altair = "^4.2.2"
+altair-saver = "^0.5.0"
+dvc = "^2.45.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "proxy-orange"
+url = "https://artifactory.tech.orange/artifactory/api/pypi/pythonproxy/simple"
+default = true

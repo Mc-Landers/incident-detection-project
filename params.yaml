@@ -1,0 +1,26 @@
+params: 
+    6H-no_rolling-low_textual :
+        n : 6
+        t : H
+        contact : 500
+        info : 5000
+        sujet : 1000
+        solution : 750
+        types : 750
+        w : 1
+        a : 1
+        periode_start : 2021
+        periode_end : 2022
+    30T-no_rolling-low_textual :
+        n : 30
+        t : T
+        contact : 500
+        info : 5000
+        sujet : 1000
+        solution : 750
+        types : 750
+        w : 1
+        a : 1
+        periode_start : 2021
+        periode_end : 2022
+    

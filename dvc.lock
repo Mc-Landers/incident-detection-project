@@ -1,0 +1,841 @@
+schema: '2.0'
+stages:
+  compute_crisis_data:
+    cmd: python3 scripts/compute_crisis.py
+    deps:
+    - path: DATA/V360_incident_mail_label_2021_2022S1_20221221.xlsx
+      md5: 70d687b6919cd240a8159547041a237b
+      size: 25051
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/crisis_messagerie_cleaned.csv
+      md5: 04bbce691bf5c2bb0f9ac0369f51b415
+      size: 15771303
+  compute_dataframe_cleaned@3H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_dataframe_cleaned.py  --n=30  --t=T --contact=500
+      --info=5000 --sujet=1000 --solution=450 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/crisis_messagerie_cleaned.csv
+      md5: 04bbce691bf5c2bb0f9ac0369f51b415
+      size: 15771303
+    - path: DATA/spas_mail_brute_2021_2022.csv
+      md5: f738b29b354266668ced776f391f1de5
+      size: 737260726
+    - path: fonctions/compute_rolling_mean.py
+      md5: 5b391e7054c9da047ccc5035491cdbd2
+      size: 423
+    - path: fonctions/get_holidays.py
+      md5: 31dc0e6b7482456eeafa36ae5c8a1f7c
+      size: 1099
+    - path: fonctions/nb_df
+      md5: 106eb4879830d7eb46380bf1e6f30f8b.dir
+      size: 33622
+      nfiles: 24
+    - path: fonctions/param.py
+      md5: 0f2c6c6885005ecc0fa0b4d445f3f61b
+      size: 158
+    outs:
+    - path: DATA/data_messagerie_cleaned_30_T_1_1.csv
+      md5: 6cf530a39cc487397a5737efb07df2bc
+      size: 31711073
+  compute_dataframe_cleaned@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_dataframe_cleaned.py  --n=6  --t=H --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/crisis_messagerie_cleaned.csv
+      md5: 04bbce691bf5c2bb0f9ac0369f51b415
+      size: 15771303
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/compute_rolling_mean.py
+      md5: 5b391e7054c9da047ccc5035491cdbd2
+      size: 423
+    - path: fonctions/crisis_df/save_crisis_df.py
+      md5: eff00526ff42867c1e0efa69de9c9cca
+      size: 502
+    - path: fonctions/get_holidays.py
+      md5: 31dc0e6b7482456eeafa36ae5c8a1f7c
+      size: 1099
+    - path: fonctions/nb_df/add_crisis.py
+      md5: a4dd38ea08f7b3096998f7397d2fa7a3
+      size: 769
+    - path: fonctions/nb_df/build_dataset.py
+      md5: 4c0cde4a5fb5f265b58791cf1a37eeb0
+      size: 2725
+    - path: fonctions/nb_df/encoding_dataset.py
+      md5: ecc180cc3ba54e9d9434d966d6f2acfe
+      size: 3685
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: DATA/Clean/format_textuel_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: aee9f246d84a8cb6edf9bf21266a78ef
+      size: 105651438
+    - path: DATA/Clean/unique_values_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+  compute_dataframe_cleaned@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_dataframe_cleaned.py  --n=30  --t=T --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/crisis_messagerie_cleaned.csv
+      md5: 04bbce691bf5c2bb0f9ac0369f51b415
+      size: 15771303
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/compute_rolling_mean.py
+      md5: 5b391e7054c9da047ccc5035491cdbd2
+      size: 423
+    - path: fonctions/crisis_df/save_crisis_df.py
+      md5: eff00526ff42867c1e0efa69de9c9cca
+      size: 502
+    - path: fonctions/get_holidays.py
+      md5: 31dc0e6b7482456eeafa36ae5c8a1f7c
+      size: 1099
+    - path: fonctions/nb_df/add_crisis.py
+      md5: a4dd38ea08f7b3096998f7397d2fa7a3
+      size: 769
+    - path: fonctions/nb_df/build_dataset.py
+      md5: 4c0cde4a5fb5f265b58791cf1a37eeb0
+      size: 2725
+    - path: fonctions/nb_df/encoding_dataset.py
+      md5: ecc180cc3ba54e9d9434d966d6f2acfe
+      size: 3685
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: DATA/Clean/format_textuel_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: aee9f246d84a8cb6edf9bf21266a78ef
+      size: 105651438
+    - path: DATA/Clean/unique_values_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+  compute_graphs@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs.py  --n=6  --t=H --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: 3be7c5c5724cbe1b6c3fc7f633ed3462
+      size: 3394843
+    - path: DATA/Clean/unique_values_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: c61dff763a9d534c5f6a9dd97e41fcf3
+      size: 2752
+    - path: fonctions/crisis_df
+      md5: 0ae324b5c582ec24523ab5bf4d540ac4.dir
+      size: 13985
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: a64138e0d302a1e1606636dc720a9ab7.dir
+      size: 96156
+      nfiles: 22
+    - path: fonctions/nb_df
+      md5: 048fef8b92c9077dd4fa3ca1aac43ffd.dir
+      size: 35885
+      nfiles: 24
+    outs:
+    - path: DATA/Visualisation/6_H
+      md5: dff5efd0dfb11225da7c99d63c0fcb45.dir
+      size: 25803921
+      nfiles: 105
+  compute_graphs@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs.py  --n=30  --t=T --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d91709d5a762a03d41e71f1b81f142b5
+      size: 37498386
+    - path: DATA/Clean/unique_values_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: c61dff763a9d534c5f6a9dd97e41fcf3
+      size: 2752
+    - path: fonctions/crisis_df
+      md5: 0ae324b5c582ec24523ab5bf4d540ac4.dir
+      size: 13985
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: a64138e0d302a1e1606636dc720a9ab7.dir
+      size: 96156
+      nfiles: 22
+    - path: fonctions/nb_df
+      md5: 048fef8b92c9077dd4fa3ca1aac43ffd.dir
+      size: 35885
+      nfiles: 24
+    outs:
+    - path: DATA/Visualisation/30_T
+      md5: df59b80f4d74fceae0c7fd20fe4d19c2.dir
+      size: 357670408
+      nfiles: 127
+  compute_ISO@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_ISO.py  --n=30  --t=T --contact=500 --info=5000 --sujet=1000
+      --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: DATA/Clean/unique_values_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/isolation_forest
+      md5: 737379b2bc450deb523918f59dd4e51b.dir
+      size: 8154
+      nfiles: 6
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/nb_df
+      md5: b6c72a53350c2cf7325f1206d59ca74d.dir
+      size: 54776
+      nfiles: 30
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/ISO/data_anomaly_ISO_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d6946a75aa812087bdfa32a165da231d
+      size: 794081
+    - path: DATA/Clean/Metrics/metrics_ISO_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 23d27e345baf4698745d2c0aa11f2bc1
+      size: 135
+  compute_ISO@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_ISO.py  --n=6  --t=H --contact=500 --info=5000 --sujet=1000
+      --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: DATA/Clean/unique_values_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/isolation_forest
+      md5: 737379b2bc450deb523918f59dd4e51b.dir
+      size: 8154
+      nfiles: 6
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/nb_df
+      md5: b6c72a53350c2cf7325f1206d59ca74d.dir
+      size: 54776
+      nfiles: 30
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/ISO/data_anomaly_ISO_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 61a1974cd083659af26c5475d6773a01
+      size: 66200
+    - path: DATA/Clean/Metrics/metrics_ISO_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: f8a5b45af802ce0bfbf580f689f8df8d
+      size: 135
+  compute_graphs_overall@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs_overall.py  --n=30  --t=T --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/format_textuel_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: aee9f246d84a8cb6edf9bf21266a78ef
+      size: 105651438
+    - path: DATA/Clean/unique_values_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: 8c3859c11ce3fd168ab326f87f26f376.dir
+      size: 115428
+      nfiles: 30
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    outs:
+    - path: DATA/Visualisation/30_T/Overall
+      md5: b7cf05584d71856480b71cc1fb5f425d.dir
+      size: 11840
+      nfiles: 1
+  compute_graphs_variables@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs_variables.py  --n=30  --t=T --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/format_textuel_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: aee9f246d84a8cb6edf9bf21266a78ef
+      size: 105651438
+    - path: DATA/Clean/unique_values_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: 8c3859c11ce3fd168ab326f87f26f376.dir
+      size: 115428
+      nfiles: 30
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    outs:
+    - path: DATA/Visualisation/30_T/Variable
+      md5: 45e3c75fe0a30d026620c0ccd97e0bfa.dir
+      size: 295701963
+      nfiles: 55
+  compute_graphs_variables@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs_variables.py  --n=6  --t=H --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/unique_values_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: 8c3859c11ce3fd168ab326f87f26f376.dir
+      size: 115428
+      nfiles: 30
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    outs:
+    - path: DATA/Visualisation/6_H/Variable
+      md5: ba16c5c24616ec49fd98391bcb267a3a.dir
+      size: 19826114
+      nfiles: 55
+  compute_graphs_temps@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs_temps.py  --n=30  --t=T --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/unique_values_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: 8c3859c11ce3fd168ab326f87f26f376.dir
+      size: 115428
+      nfiles: 30
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    outs:
+    - path: DATA/Visualisation/30_T/Période
+      md5: 7094e56fdcbe22afe1d21bf5794f2809.dir
+      size: 15186943
+      nfiles: 66
+  compute_graphs_temps@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs_temps.py  --n=6  --t=H --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/format_textuel_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: aee9f246d84a8cb6edf9bf21266a78ef
+      size: 105651438
+    - path: DATA/Clean/unique_values_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: 8c3859c11ce3fd168ab326f87f26f376.dir
+      size: 115428
+      nfiles: 30
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    outs:
+    - path: DATA/Visualisation/6_H/Période
+      md5: 3d1d44354b54302c56e0b044a959a921.dir
+      size: 3582268
+      nfiles: 46
+  compute_graphs_overall@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_crisis_graphs_overall.py  --n=6  --t=H --contact=500
+      --info=5000 --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021
+      --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/format_textuel_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: aee9f246d84a8cb6edf9bf21266a78ef
+      size: 105651438
+    - path: DATA/Clean/unique_values_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: 51de6a8f0dab260671dd78bf9f462043
+      size: 2638
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/crisis_df
+      md5: 049470c2e767fb6531a883f57834426d.dir
+      size: 13974
+      nfiles: 16
+    - path: fonctions/crisis_graphs
+      md5: 8c3859c11ce3fd168ab326f87f26f376.dir
+      size: 115428
+      nfiles: 30
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    outs:
+    - path: DATA/Visualisation/6_H/Overall
+      md5: 5d236d2efd35f5dcfb9940254dbb2f97.dir
+      size: 11840
+      nfiles: 1
+  compute_lock_and_load@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_lock_and_load.py  --n=30  --t=T --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/spas_mail_brute_2021_2022.csv
+      md5: f738b29b354266668ced776f391f1de5
+      size: 737260726
+    - path: fonctions/nb_df/lock_and_load.py
+      md5: dc9ea66d020152f49cf2046e1a889163
+      size: 1090
+    - path: fonctions/nb_df/save_df.py
+      md5: 6f531dcdd6df474d65273e29f53cd392
+      size: 5316
+    - path: fonctions/param.py
+      md5: e3888685ebc6e663f4b88882dedafdb9
+      size: 134
+    outs:
+    - path: DATA/Clean/data_mise_en_forme_30_T_1_1.csv
+      md5: 4cb1f333de527718b44ba02f167c9018
+      size: 99874760
+    - path: DATA/Clean/variable_textuelle_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+  compute_data_cleaning@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_data_cleaning.py  --n=30  --t=T --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_mise_en_forme_30_T_1_1.csv
+      md5: 4cb1f333de527718b44ba02f167c9018
+      size: 99874760
+    - path: DATA/Clean/variable_textuelle_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/nb_df/data_cleaning_strings.py
+      md5: ebf3b4a7169463f9b6c35b468b275311
+      size: 488
+    - path: fonctions/nb_df/save_df.py
+      md5: 6f531dcdd6df474d65273e29f53cd392
+      size: 5316
+    - path: fonctions/param.py
+      md5: e3888685ebc6e663f4b88882dedafdb9
+      size: 134
+    outs:
+    - path: DATA/Clean/data_messagerie_cleaning_strings_30_T_1_1.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+  compute_lock_and_load:
+    cmd: python3 scripts/compute_lock_and_load.py
+    deps:
+    - path: DATA/spas_mail_brute_2021_2022.csv
+      md5: f738b29b354266668ced776f391f1de5
+      size: 737260726
+    - path: fonctions/nb_df/extract_data.py
+      md5: 5fed1a6183dfd512acbc53e3f0195474
+      size: 468
+    - path: fonctions/nb_df/lock_and_load.py
+      md5: 859c9613fe5862843c9ba94ba6003ea8
+      size: 973
+    - path: fonctions/nb_df/save_df.py
+      md5: 16cbbb5e6eb8469d83d3a22a341eba51
+      size: 5043
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/data_mise_en_forme.csv
+      md5: 4cb1f333de527718b44ba02f167c9018
+      size: 99874760
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+  compute_data_cleaning:
+    cmd: python3 scripts/compute_data_cleaning.py
+    deps:
+    - path: DATA/Clean/data_mise_en_forme.csv
+      md5: 4cb1f333de527718b44ba02f167c9018
+      size: 99874760
+    - path: DATA/Clean/variable_textuelle.pkl
+      md5: c706ba622c87247d96c3b12fda6ccb49
+      size: 73
+    - path: fonctions/nb_df/create_200000_lines_df.py
+      md5: 4c0d684423f740214ffebf659741b779
+      size: 1841
+    - path: fonctions/nb_df/data_cleaning_strings.py
+      md5: ebf3b4a7169463f9b6c35b468b275311
+      size: 488
+    - path: fonctions/nb_df/save_df.py
+      md5: e097df8dccb5e44153082d7eca55c6d4
+      size: 5617
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/VisualCRM
+      md5: 306a8b00adba46fd3f7fda358236cdd5.dir
+      size: 101518631
+      nfiles: 4
+    - path: DATA/Clean/data_messagerie_cleaning_strings.csv
+      md5: 709674b06a00cbf5d5b7c57dc586ca4a
+      size: 92042722
+    - path: DATA/Clean/variable_dataframe_to_convert.pkl
+      md5: 2dda37723216f48d48432e0938d5291e
+      size: 175
+  compute_rand_algo@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_rand_algo.py  --n=30  --t=T --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/nb_df
+      md5: b6c72a53350c2cf7325f1206d59ca74d.dir
+      size: 54776
+      nfiles: 30
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    - path: fonctions/random_algo
+      md5: 970eb96cb015fe27062d75829d626fe4.dir
+      size: 10038
+      nfiles: 15
+    outs:
+    - path: DATA/Clean/Metrics/metrics_10_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d70faec2bac2bafb7f4323e3dd88d3b1
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_20_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 15554e34b6f155f3e773c8b78870efc4
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_30_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 1bd3014c8c5a5d75d2b553aa7e12c74c
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_40_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 9e96a07f12028a059936e9a19b07e8d6
+      size: 143
+    - path: DATA/Clean/Metrics/metrics_50_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d4a53b37a603477f8af589a642e53ab5
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_60_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 0a0b05859ae138b61660875a8b13ecee
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_70_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: fd02ecfb51c5ce9919f39b43a40bdcd7
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_80_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: bd514535eba2c7e1c625f24eb2d9010c
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_90_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: bf38115409c88cad7ea777546285c0dd
+      size: 142
+    - path: DATA/Clean/Rand/30_T
+      md5: ce1f7eb119d6704af56e49547f0a3846.dir
+      size: 7146765
+      nfiles: 9
+  compute_metrics@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_tableau_metrics.py  --n=30  --t=T --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/Metrics/metrics_10_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d70faec2bac2bafb7f4323e3dd88d3b1
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_20_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 15554e34b6f155f3e773c8b78870efc4
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_30_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 1bd3014c8c5a5d75d2b553aa7e12c74c
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_40_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 9e96a07f12028a059936e9a19b07e8d6
+      size: 143
+    - path: DATA/Clean/Metrics/metrics_50_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d4a53b37a603477f8af589a642e53ab5
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_60_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 0a0b05859ae138b61660875a8b13ecee
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_70_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: fd02ecfb51c5ce9919f39b43a40bdcd7
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_80_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: bd514535eba2c7e1c625f24eb2d9010c
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_90_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: bf38115409c88cad7ea777546285c0dd
+      size: 142
+    - path: DATA/Clean/Metrics/metrics_ISO_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 23d27e345baf4698745d2c0aa11f2bc1
+      size: 135
+    - path: DATA/Clean/Metrics/metrics_prophete_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 061ae1656dc3aaf97d73c58c124acc44
+      size: 146
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/Metrics/METRICS_FINAL_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 8b7a1662ebbe6b84e8fc352367745645
+      size: 1023
+  compute_rand_algo@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_rand_algo.py  --n=6  --t=H --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/nb_df
+      md5: b6c72a53350c2cf7325f1206d59ca74d.dir
+      size: 54776
+      nfiles: 30
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    - path: fonctions/random_algo
+      md5: 970eb96cb015fe27062d75829d626fe4.dir
+      size: 10038
+      nfiles: 15
+    outs:
+    - path: DATA/Clean/Metrics/metrics_10_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 2d2e9389a60bcb0dbf5d06dee5476c71
+      size: 143
+    - path: DATA/Clean/Metrics/metrics_20_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 702c35daefcbcee4b15a182e3b215936
+      size: 142
+    - path: DATA/Clean/Metrics/metrics_30_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: a7cea739725975d8b2d6791850d2676a
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_40_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d96a6145ee754589979fef737f69b739
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_50_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 18f77060e59c1790db300555abaca3f5
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_60_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 100ecfa247a32edef28ecc6e02b6010f
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_70_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 4f14211f79734c88a10b4b6c2a5ca2cb
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_80_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 19a8703865e77a9b4d61621a5248dd4b
+      size: 143
+    - path: DATA/Clean/Metrics/metrics_90_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 20d968d79c27712431f626fea9686504
+      size: 145
+    - path: DATA/Clean/Rand/6_H
+      md5: 0d6f43e1386d1d386834f7df72c90571.dir
+      size: 595836
+      nfiles: 9
+  compute_metrics@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_tableau_metrics.py  --n=6  --t=H --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/Metrics/metrics_10_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 2d2e9389a60bcb0dbf5d06dee5476c71
+      size: 143
+    - path: DATA/Clean/Metrics/metrics_20_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 702c35daefcbcee4b15a182e3b215936
+      size: 142
+    - path: DATA/Clean/Metrics/metrics_30_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: a7cea739725975d8b2d6791850d2676a
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_40_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: d96a6145ee754589979fef737f69b739
+      size: 146
+    - path: DATA/Clean/Metrics/metrics_50_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 18f77060e59c1790db300555abaca3f5
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_60_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 100ecfa247a32edef28ecc6e02b6010f
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_70_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 4f14211f79734c88a10b4b6c2a5ca2cb
+      size: 144
+    - path: DATA/Clean/Metrics/metrics_80_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 19a8703865e77a9b4d61621a5248dd4b
+      size: 143
+    - path: DATA/Clean/Metrics/metrics_90_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 20d968d79c27712431f626fea9686504
+      size: 145
+    - path: DATA/Clean/Metrics/metrics_ISO_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: f8a5b45af802ce0bfbf580f689f8df8d
+      size: 135
+    - path: DATA/Clean/Metrics/metrics_prophete_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: be8ff4f421865a2ab0dae11875718a16
+      size: 76
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    outs:
+    - path: DATA/Clean/Metrics/METRICS_FINAL_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 94903304a9aa7a170e8ccd21bc3fca86
+      size: 1011
+  compute_prophet_algo@6H-no_rolling-low_textual:
+    cmd: python3 scripts/compute_prophete.py  --n=6  --t=H --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_6_H_1_1.csv
+      md5: cc8a5705cd34f58fdc69ee49f312a428
+      size: 3183914
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/nb_df
+      md5: b6c72a53350c2cf7325f1206d59ca74d.dir
+      size: 54776
+      nfiles: 30
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    - path: fonctions/prophete
+      md5: 88906d302a05ce8b107902dc52a2a9e3.dir
+      size: 9799
+      nfiles: 6
+    outs:
+    - path: DATA/Clean/Metrics/metrics_prophete_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: be8ff4f421865a2ab0dae11875718a16
+      size: 76
+    - path: DATA/Clean/prophete/data_anomaly_prophete_6_H_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 4419c1f15fbb193dfe1e21a329d02ef9
+      size: 46387
+  compute_prophet_algo@30T-no_rolling-low_textual:
+    cmd: python3 scripts/compute_prophete.py  --n=30  --t=T --contact=500 --info=5000
+      --sujet=1000 --solution=750 --types=750 --w=1 --a=1 --periode_start=2021 --periode_end=2022
+    deps:
+    - path: DATA/Clean/data_messagerie_cleaned_30_T_1_1.csv
+      md5: d5ef30278fefb1646df3d67412d22ff3
+      size: 34983842
+    - path: fonctions/metrics
+      md5: 0888191784854af388e14bc26a00fbc8.dir
+      size: 14723
+      nfiles: 14
+    - path: fonctions/nb_df
+      md5: b6c72a53350c2cf7325f1206d59ca74d.dir
+      size: 54776
+      nfiles: 30
+    - path: fonctions/param.py
+      md5: b4567815b7d0d3f25a663cdd89a3abb1
+      size: 164
+    - path: fonctions/prophete
+      md5: 88906d302a05ce8b107902dc52a2a9e3.dir
+      size: 9799
+      nfiles: 6
+    outs:
+    - path: DATA/Clean/Metrics/metrics_prophete_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: 061ae1656dc3aaf97d73c58c124acc44
+      size: 146
+    - path: DATA/Clean/prophete/data_anomaly_prophete_30_T_1_1_Co_500_In_5000_Su_1000_So_750_Ty_750.csv
+      md5: a3738e3b2b6d47f3db69c47eb0652bb4
+      size: 556435
